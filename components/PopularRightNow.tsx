@@ -10,7 +10,7 @@ export default function PopularRightNow() {
 
   return (
     <section className="mx-auto w-full max-w-[1440px] px-5 pb-16 pt-6 md:px-10 md:pb-24">
-      <h2 className="font-serif text-xl font-medium uppercase tracking-wide">Popular right now</h2>
+      <h2 className="font-serif text-xl font-medium uppercase tracking-wide">Best Sellers</h2>
 
       <div role="tablist" aria-label="Shop by" className="mt-5 flex gap-2">
         {popularTabs.map((t) => (
@@ -34,7 +34,7 @@ export default function PopularRightNow() {
       <div className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
         {popularCards.map((c) => (
           <Link key={c.title} href="#" className="group block">
-            <div className="relative aspect-[4/5] overflow-hidden bg-oduro-ivory">
+            <div className="relative aspect-[4/5] overflow-hidden bg-oduro-ash">
               <Image
                 src="/images/elixir.jpg"
                 alt=""

@@ -38,7 +38,7 @@ export default function ProductSection({
               type="button"
               aria-label={i === 0 ? "Previous" : "Next"}
               onClick={() => scroll(i === 0 ? -1 : 1)}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-oduro-champagne text-base transition-colors hover:bg-oduro-ivory"
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-oduro-champagne text-base transition-colors hover:bg-white"
             >
               {a}
             </button>

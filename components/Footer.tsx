@@ -4,7 +4,7 @@ import { footerColumns } from "@/lib/data";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-oduro-champagne/50 bg-oduro-ivory">
+    <footer className="border-t border-oduro-champagne/50 bg-white">
       <div className="mx-auto max-w-[1440px] px-5 py-14 md:px-10 md:py-16">
         <div className="grid gap-10 md:grid-cols-[1.6fr_repeat(4,1fr)]">
           <div className="flex flex-col gap-4">

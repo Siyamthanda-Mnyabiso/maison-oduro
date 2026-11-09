@@ -37,7 +37,7 @@ export default function MobileMenu({ open, onClose }: { open: boolean; onClose: 
         role="dialog"
         aria-modal="true"
         aria-label="Menu"
-        className={`absolute left-0 top-0 flex h-full w-[84%] max-w-[360px] flex-col bg-oduro-ivory text-oduro-dark shadow-2xl transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        className={`absolute left-0 top-0 flex h-full w-[84%] max-w-[360px] flex-col bg-white text-oduro-dark shadow-2xl transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >

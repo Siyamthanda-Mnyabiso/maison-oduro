@@ -8,6 +8,7 @@
   --color-oduro-gold: #b68d40;
   --color-oduro-champagne: #c7a98b;
   --color-oduro-ivory: #f4efe7;
+  --color-oduro-ash: #e4e4e4;
 
   --font-serif: var(--font-playfair), Georgia, serif;
   --font-sans: var(--font-montserrat), system-ui, sans-serif;
@@ -18,7 +19,7 @@ html {
 }
 
 body {
-  background: var(--color-oduro-ivory);
+  background: #ffffff;
   color: var(--color-oduro-dark);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;

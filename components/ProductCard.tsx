@@ -1,11 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
 import type { Product, ProductOption } from "@/lib/data";
 import { optionImages, productOptions } from "@/lib/data";
 import { useCart } from "@/lib/cart";
+import ProductDetail from "./ProductDetail";
 
 const uniqueImages = Array.from(new Set(Object.values(optionImages)));
 
@@ -13,14 +13,15 @@ export default function ProductCard({ product }: { product: Product }) {
   const { add } = useCart();
   const [selected, setSelected] = useState<ProductOption>("Premium");
   const [preview, setPreview] = useState<ProductOption | null>(null);
+  const [detailOpen, setDetailOpen] = useState(false);
 
   // Hovering (or focusing) a format previews its bottle; clicking selects it.
   const shown = optionImages[preview ?? selected];
 
   return (
     <article className="group w-[62%] shrink-0 snap-start sm:w-[calc((100%-48px)/3)] lg:w-[calc((100%-96px)/5)]">
-      <div className="relative aspect-[4/5] overflow-hidden bg-oduro-ivory">
-        <Link href="#" aria-label={product.name} className="absolute inset-0">
+      <div className="relative aspect-[4/5] overflow-hidden bg-oduro-ash">
+        <button type="button" aria-label={`${product.name} details`} onClick={() => setDetailOpen(true)} className="absolute inset-0">
           {uniqueImages.map((src) => (
             <Image
               key={src}
@@ -33,10 +34,10 @@ export default function ProductCard({ product }: { product: Product }) {
               }`}
             />
           ))}
-        </Link>
+        </button>
 
         {/* Formats revealed on hover / keyboard focus (always visible on touch screens) */}
-        <div className="absolute inset-x-0 bottom-0 translate-y-full bg-oduro-ivory/95 px-4 pb-4 pt-3 text-center opacity-0 backdrop-blur-md transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100 [@media(hover:none)]:translate-y-0 [@media(hover:none)]:opacity-100">
+        <div className="absolute inset-x-0 bottom-0 translate-y-full bg-white/95 px-4 pb-4 pt-3 text-center opacity-0 backdrop-blur-md transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100 [@media(hover:none)]:translate-y-0 [@media(hover:none)]:opacity-100">
           <p className="mb-2.5 text-[9px] font-medium uppercase tracking-[0.28em] text-oduro-copper">
             Choose your format
           </p>
@@ -56,13 +57,7 @@ export default function ProductCard({ product }: { product: Product }) {
                   aria-checked={selected === o}
                   onClick={() => {
                     setSelected(o);
-                    add({
-                      name: product.name,
-                      variant: product.variant,
-                      format: o,
-                      priceLabel: product.price,
-                      image: optionImages[o],
-                    });
+                    setDetailOpen(true);
                   }}
                   onMouseEnter={() => setPreview(o)}
                   onFocus={() => setPreview(o)}
@@ -81,13 +76,32 @@ export default function ProductCard({ product }: { product: Product }) {
         </div>
       </div>
 
-      <Link href="#" className="block px-1 pt-4 text-center">
+      <button type="button" onClick={() => setDetailOpen(true)} className="block w-full px-1 pt-4 text-center">
         <h3 className="flex min-h-[3.5rem] items-start justify-center font-serif text-lg leading-snug">
           {product.name}
         </h3>
         <p className="mt-1.5 text-xs text-oduro-rich">{product.variant}</p>
         <p className="mt-1.5 text-[13px] font-medium">{product.price}</p>
-      </Link>
+      </button>
+
+      {detailOpen && (
+        <ProductDetail
+          product={product}
+          format={selected}
+          onFormat={setSelected}
+          onClose={() => setDetailOpen(false)}
+          onAdd={() => {
+            add({
+              name: product.name,
+              variant: product.variant,
+              format: selected,
+              priceLabel: product.price,
+              image: optionImages[selected],
+            });
+            setDetailOpen(false);
+          }}
+        />
+      )}
     </article>
   );
 }

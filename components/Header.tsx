@@ -68,7 +68,7 @@ export default function Header() {
 
   return (
     <header
-      className="group absolute inset-x-0 top-9 z-30 bg-transparent text-white transition-colors duration-300 ease-out hover:bg-oduro-ivory hover:text-oduro-dark focus-within:bg-oduro-ivory focus-within:text-oduro-dark"
+      className="group absolute inset-x-0 top-9 z-30 bg-transparent text-white transition-colors duration-300 ease-out hover:bg-white hover:text-oduro-dark focus-within:bg-white focus-within:text-oduro-dark"
     >
       <div className="relative mx-auto flex h-[72px] max-w-[1440px] items-center justify-between px-5 md:px-10">
         <nav aria-label="Primary" className="hidden items-center gap-8 md:flex">

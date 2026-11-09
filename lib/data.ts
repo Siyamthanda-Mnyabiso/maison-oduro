@@ -22,15 +22,23 @@ export const vengeance: Product[] = [
   { name: "Vengeance Graphic Tank", variant: "Oversized Fit · White/Wash", price: "R580" },
 ];
 
-export const productOptions = ["Premium", "Standard", "Roller-on"] as const;
+export const productOptions = ["Premium", "Standard", "Rollers"] as const;
 export type ProductOption = (typeof productOptions)[number];
 
-// Bottle shown for each format. Roller-on has no photo yet, so it reuses
+// Bottle shown for each format. Rollers has no photo yet, so it reuses
 // the Premium bottle. Drop a new file in /public/images and point it here.
 export const optionImages: Record<ProductOption, string> = {
   Premium: "/images/elixir.jpg",
   Standard: "/images/elixir-standard.jpg",
-  "Roller-on": "/images/elixir.jpg",
+  Rollers: "/images/elixir.jpg",
+};
+
+// Shown in the product details once a product is selected.
+// Placeholder copy: replace with the real Maison Oduro descriptions.
+export const formatDescriptions: Record<ProductOption, string> = {
+  Premium: "The signature bottle, presented in full. A rich, long-lasting elixir made to be worn and remembered.",
+  Standard: "The everyday bottle. The same house fragrance in a lighter, easy-to-reach format.",
+  Rollers: "Pocket-sized rollers for touch-ups on the go. Apply to pulse points and carry it anywhere.",
 };
 
 // Cart settings and copy
@@ -50,7 +58,7 @@ export const cartExtras = [
   { name: "Signature Gift Box", price: "R500", image: "/images/elixir.jpg" },
   { name: "Sample Trio", price: "R400", image: "/images/elixir-standard.jpg" },
   { name: "Leather Pouch", price: "R450", image: "/images/elixir.jpg" },
-  { name: "Roller-on Refill", price: "R450", image: "/images/elixir-standard.jpg" },
+  { name: "Rollers Refill", price: "R450", image: "/images/elixir-standard.jpg" },
 ];
 
 export const popularTabs = ["Women", "Men", "Unisex"] as const;
