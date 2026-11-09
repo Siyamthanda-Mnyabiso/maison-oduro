@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useCart } from "@/lib/cart";
 import type { Product, ProductOption } from "@/lib/data";
@@ -22,15 +23,16 @@ function Row({ title, children }: { title: string; children: React.ReactNode }) 
 
 export default function ProductView({
   product,
-  initialFormat,
   related,
 }: {
   product: Product;
-  initialFormat: ProductOption;
   related: Product[];
 }) {
   const { add } = useCart();
-  const [format, setFormat] = useState<ProductOption>(initialFormat);
+  const params = useSearchParams();
+  const [format, setFormat] = useState<ProductOption>(
+    productOptions.find((o) => o === params.get("format")) ?? "Premium",
+  );
 
   const gallery = Array.from(new Set([optionImages[format], ...Object.values(optionImages), "/images/story.jpg"]));
 
