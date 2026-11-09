@@ -65,7 +65,7 @@ export default function CartDrawer() {
             type="button"
             onClick={close}
             aria-label="Close bag"
-            className="flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-oduro-ivory"
+            className="flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-white"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
               <path d="M5 5l14 14M19 5L5 19" />
@@ -75,7 +75,7 @@ export default function CartDrawer() {
 
         <div className="flex-1 overflow-y-auto">
           {/* Free shipping progress */}
-          <section className="bg-oduro-ivory px-6 py-5" aria-label="Free shipping progress">
+          <section className="bg-white px-6 py-5" aria-label="Free shipping progress">
             <p className="text-[13px]">
               {away > 0 ? (
                 <>
@@ -192,7 +192,7 @@ export default function CartDrawer() {
                             type="button"
                             aria-label={`Decrease quantity of ${it.name}`}
                             onClick={() => setQty(it.id, it.qty - 1)}
-                            className="h-8 w-8 text-base transition-colors hover:bg-oduro-ivory"
+                            className="h-8 w-8 text-base transition-colors hover:bg-white"
                           >
                             −
                           </button>
@@ -203,7 +203,7 @@ export default function CartDrawer() {
                             type="button"
                             aria-label={`Increase quantity of ${it.name}`}
                             onClick={() => setQty(it.id, it.qty + 1)}
-                            className="h-8 w-8 text-base transition-colors hover:bg-oduro-ivory"
+                            className="h-8 w-8 text-base transition-colors hover:bg-white"
                           >
                             +
                           </button>
