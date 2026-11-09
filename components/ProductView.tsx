@@ -3,48 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import MobileMenu from "@/components/MobileMenu";
 import { useCart } from "@/lib/cart";
 import type { Product, ProductOption } from "@/lib/data";
 import { formatDescriptions, optionImages, productOptions, slugify } from "@/lib/data";
 
 const BG = "bg-[#ebeae6]";
-
-/** Minimal fixed chrome, like Zara: menu lines top-left, search / bag / log in / help top-right. */
-function Chrome({ onMenu }: { onMenu: () => void }) {
-  const { count, open } = useCart();
-  return (
-    <>
-      <button
-        type="button"
-        aria-label="Menu"
-        onClick={onMenu}
-        className="fixed left-5 top-6 z-40 flex h-6 w-16 flex-col justify-between py-2 md:left-[30px]"
-      >
-        <span className="h-px w-full bg-oduro-dark" />
-        <span className="h-px w-full bg-oduro-dark" />
-      </button>
-
-      <Link href="/" aria-label="Maison Oduro home" className="fixed left-1/2 top-4 z-40 -translate-x-1/2 md:hidden">
-        <Image src="/images/logo-black.png" alt="Maison Oduro" width={48} height={32} className="h-8 w-12 object-contain" />
-      </Link>
-
-      <div className="fixed right-5 top-6 z-40 flex flex-col items-end gap-4 text-right text-[13px] font-normal uppercase tracking-[0.02em] text-oduro-dark md:right-[30px]">
-        <span className="hidden w-[130px] border-b border-oduro-dark pb-1.5 text-oduro-rich/70 md:block">Search</span>
-        <div className="flex flex-col items-end gap-4 md:mt-[34px]">
-          <button type="button" onClick={open} className="flex items-center gap-2 uppercase">
-            Bag
-            <span className="inline-flex h-[14px] min-w-[18px] items-center justify-center border-x border-b border-oduro-dark px-1 text-[10px] leading-none">
-              {count}
-            </span>
-          </button>
-          <span className="hidden md:block">Log in</span>
-          <span className="hidden md:block">Help</span>
-        </div>
-      </div>
-    </>
-  );
-}
 
 function Row({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -68,16 +31,12 @@ export default function ProductView({
 }) {
   const { add } = useCart();
   const [format, setFormat] = useState<ProductOption>(initialFormat);
-  const [menu, setMenu] = useState(false);
 
   const gallery = Array.from(new Set([optionImages[format], ...Object.values(optionImages), "/images/story.jpg"]));
 
   return (
     <>
-      <Chrome onMenu={() => setMenu(true)} />
-      <MobileMenu open={menu} onClose={() => setMenu(false)} always />
-
-      <main className="relative pt-[88px] md:pt-[30px]">
+      <main className="relative pt-6 md:pt-8">
         {/* Gallery: staggered column, like Zara */}
         <div className="flex flex-col gap-4 md:pl-[13%] md:pr-[14%]">
           {gallery.map((src, i) => (
@@ -100,7 +59,7 @@ export default function ProductView({
         </div>
 
         {/* Details: top right of the first image, scrolls away with the page */}
-        <section className="px-5 pb-12 pt-8 md:absolute md:left-[62%] md:top-[160px] md:w-[24%] md:min-w-[300px] md:p-0">
+        <section className="px-5 pb-12 pt-8 md:absolute md:left-[62%] md:top-[96px] md:w-[24%] md:min-w-[300px] md:p-0">
           <h1 className="text-[13px] font-normal uppercase leading-[23px] tracking-[0.01em]">{product.name}</h1>
           <p className="text-[13px] leading-[23px]">{product.price}.00</p>
           <p className="text-[11px] leading-[18px] text-oduro-rich/80">Taxes included</p>

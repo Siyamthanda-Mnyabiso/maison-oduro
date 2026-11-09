@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
+import AnnouncementBar from "@/components/AnnouncementBar";
 import Footer from "@/components/Footer";
+import Header from "@/components/Header";
 import ProductView from "@/components/ProductView";
 import { allProducts, findProduct, slugify, productOptions, type ProductOption } from "@/lib/data";
 
@@ -22,6 +24,8 @@ export default async function ProductPage({
 
   return (
     <>
+      <AnnouncementBar />
+      <Header solid />
       <ProductView product={product} related={allProducts().filter((p) => p !== product).slice(0, 4)} initialFormat={initial as ProductOption} />
       <Footer />
     </>

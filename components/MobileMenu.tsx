@@ -8,7 +8,7 @@ import { navLinks } from "@/lib/data";
 const secondary = ["Search", "Wishlist", "Account", "Contact"];
 
 /** Slide-out menu that comes in from the left on mobile. */
-export default function MobileMenu({ open, onClose, always = false }: { open: boolean; onClose: () => void; always?: boolean }) {
+export default function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
   const closeBtn = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -25,7 +25,7 @@ export default function MobileMenu({ open, onClose, always = false }: { open: bo
   }, [open, onClose]);
 
   return (
-    <div className={`fixed inset-0 z-50 ${always ? "" : "md:hidden"} ${open ? "" : "pointer-events-none"}`} aria-hidden={!open}>
+    <div className={`fixed inset-0 z-50 md:hidden ${open ? "" : "pointer-events-none"}`} aria-hidden={!open}>
       <div
         onClick={onClose}
         className={`absolute inset-0 bg-oduro-dark/40 backdrop-blur-[2px] transition-opacity duration-500 ${
