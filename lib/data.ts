@@ -22,6 +22,15 @@ export const vengeance: Product[] = [
   { name: "Vengeance Graphic Tank", variant: "Oversized Fit · White/Wash", price: "R580" },
 ];
 
+export const slugify = (p: Product) =>
+  `${p.name} ${p.variant}`
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
+export const allProducts = () => [...softsense, ...vengeance];
+export const findProduct = (slug: string) => allProducts().find((p) => slugify(p) === slug);
+
 export const productOptions = ["Premium", "Standard", "Rollers"] as const;
 export type ProductOption = (typeof productOptions)[number];
 

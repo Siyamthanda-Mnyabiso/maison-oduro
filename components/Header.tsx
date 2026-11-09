@@ -62,13 +62,15 @@ const icons = [
  * On hover an Ivory layer fades in behind the nav, the text turns dark brown
  * and the logo switches to black. On mobile the menu slides in from the left.
  */
-export default function Header() {
+export default function Header({ solid = false }: { solid?: boolean }) {
   const [open, setOpen] = useState(false);
   const { count, open: openCart } = useCart();
 
   return (
     <header
-      className="group absolute inset-x-0 top-9 z-30 bg-transparent text-white transition-colors duration-300 ease-out hover:bg-white hover:text-oduro-dark focus-within:bg-white focus-within:text-oduro-dark"
+      className={`group inset-x-0 z-30 transition-colors duration-300 ease-out hover:bg-white hover:text-oduro-dark focus-within:bg-white focus-within:text-oduro-dark ${
+        solid ? "relative border-b border-oduro-champagne/40 bg-white text-oduro-dark" : "absolute top-9 bg-transparent text-white"
+      }`}
     >
       <div className="relative mx-auto flex h-[72px] max-w-[1440px] items-center justify-between px-5 md:px-10">
         <nav aria-label="Primary" className="hidden items-center gap-8 md:flex">
@@ -101,7 +103,7 @@ export default function Header() {
             fill
             sizes="60px"
             priority
-            className="object-contain opacity-100 transition-opacity duration-300 group-hover:opacity-0 group-focus-within:opacity-0"
+            className={`object-contain transition-opacity duration-300 group-hover:opacity-0 group-focus-within:opacity-0 ${solid ? "opacity-0" : "opacity-100"}`}
           />
           <Image
             src="/images/logo-black.png"
@@ -109,7 +111,7 @@ export default function Header() {
             fill
             sizes="60px"
             priority
-            className="object-contain opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-within:opacity-100"
+            className={`object-contain transition-opacity duration-300 group-hover:opacity-100 group-focus-within:opacity-100 ${solid ? "opacity-100" : "opacity-0"}`}
           />
         </Link>
 
