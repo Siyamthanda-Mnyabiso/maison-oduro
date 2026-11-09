@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import MobileMenu from "@/components/MobileMenu";
 import { useCart } from "@/lib/cart";
 import { navLinks } from "@/lib/data";
 
@@ -58,8 +59,8 @@ const icons = [
 
 /**
  * Transparent over the hero with a white logo and white text.
- * On hover (or when the mobile menu is open) a white layer fades in behind
- * the nav, the text turns dark brown and the logo switches to black.
+ * On hover an Ivory layer fades in behind the nav, the text turns dark brown
+ * and the logo switches to black. On mobile the menu slides in from the left.
  */
 export default function Header() {
   const [open, setOpen] = useState(false);
@@ -67,9 +68,7 @@ export default function Header() {
 
   return (
     <header
-      className={`group absolute inset-x-0 top-9 z-30 transition-colors duration-300 ease-out hover:bg-oduro-ivory hover:text-oduro-dark focus-within:bg-oduro-ivory focus-within:text-oduro-dark ${
-        open ? "bg-oduro-ivory text-oduro-dark" : "bg-transparent text-white"
-      }`}
+      className="group absolute inset-x-0 top-9 z-30 bg-transparent text-white transition-colors duration-300 ease-out hover:bg-oduro-ivory hover:text-oduro-dark focus-within:bg-oduro-ivory focus-within:text-oduro-dark"
     >
       <div className="relative mx-auto flex h-[72px] max-w-[1440px] items-center justify-between px-5 md:px-10">
         <nav aria-label="Primary" className="hidden items-center gap-8 md:flex">
@@ -102,9 +101,7 @@ export default function Header() {
             fill
             sizes="60px"
             priority
-            className={`object-contain transition-opacity duration-300 ${
-              open ? "opacity-0" : "opacity-100 group-hover:opacity-0 group-focus-within:opacity-0"
-            }`}
+            className="object-contain opacity-100 transition-opacity duration-300 group-hover:opacity-0 group-focus-within:opacity-0"
           />
           <Image
             src="/images/logo-black.png"
@@ -112,9 +109,7 @@ export default function Header() {
             fill
             sizes="60px"
             priority
-            className={`object-contain transition-opacity duration-300 ${
-              open ? "opacity-100" : "opacity-0 group-hover:opacity-100 group-focus-within:opacity-100"
-            }`}
+            className="object-contain opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-within:opacity-100"
           />
         </Link>
 
@@ -129,15 +124,7 @@ export default function Header() {
         </div>
       </div>
 
-      {open && (
-        <nav aria-label="Mobile" className="flex flex-col gap-1 border-t border-oduro-champagne/40 px-5 pb-5 pt-3 md:hidden">
-          {navLinks.map((l) => (
-            <Link key={l} href="#" className="py-2 font-serif text-xl">
-              {l}
-            </Link>
-          ))}
-        </nav>
-      )}
+      <MobileMenu open={open} onClose={() => setOpen(false)} />
     </header>
   );
 }
