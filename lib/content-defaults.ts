@@ -169,6 +169,7 @@ export function mergeContent(rows: { key: string; value: unknown }[]): SiteConte
           variant: typeof x.variant === "string" ? x.variant : "",
           price: typeof x.price === "string" ? x.price : "",
           description: typeof x.description === "string" ? x.description.slice(0, 1200) : "",
+          composition: typeof x.composition === "string" ? x.composition.slice(0, 1200) : "",
         }))
       : fallback;
   const products = {

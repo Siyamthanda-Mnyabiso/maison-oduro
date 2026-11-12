@@ -321,6 +321,16 @@ function ProductsPanel({ value, onChange }: { value: SiteContent["products"]; on
                       onChange={(e) => patch(p.id, { description: e.target.value })}
                     />
                   </Field>
+                  <Field label="Composition, care & origin (the expandable row on the product page)">
+                    <textarea
+                      className={`${inputCls} h-auto min-h-[84px] resize-y py-3 leading-relaxed`}
+                      rows={3}
+                      maxLength={1200}
+                      placeholder="Top, heart and base notes, concentration, how to store it, where it's made…"
+                      value={p.composition ?? ""}
+                      onChange={(e) => patch(p.id, { composition: e.target.value })}
+                    />
+                  </Field>
                 </div>
               )}
             />
