@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useCart } from "@/lib/cart";
 import type { Product, ProductOption } from "@/lib/data";
-import { formatDescriptions, optionImages, productOptions, slugify } from "@/lib/data";
+import { formatDescriptions, productOptions, slugify } from "@/lib/data";
 
 const BG = "bg-[#ebeae6]";
 
@@ -24,9 +24,13 @@ function Row({ title, children }: { title: string; children: React.ReactNode }) 
 export default function ProductView({
   product,
   related,
+  bottles,
+  gallery: extraImages,
 }: {
   product: Product;
   related: Product[];
+  bottles: Record<ProductOption, string>;
+  gallery: string[];
 }) {
   const { add } = useCart();
   const params = useSearchParams();
@@ -34,7 +38,7 @@ export default function ProductView({
     productOptions.find((o) => o === params.get("format")) ?? "Premium",
   );
 
-  const gallery = Array.from(new Set([optionImages[format], ...Object.values(optionImages), "/images/story.jpg"]));
+  const gallery = Array.from(new Set([bottles[format], ...extraImages]));
 
   return (
     <>
@@ -54,7 +58,7 @@ export default function ProductView({
                 fill
                 priority={i === 0}
                 sizes="(min-width:768px) 45vw, 100vw"
-                className={src.includes("story") ? "object-cover" : "object-contain mix-blend-multiply"}
+                className={src.includes("/story") ? "object-cover" : "object-contain mix-blend-multiply"}
               />
             </div>
           ))}
@@ -94,7 +98,7 @@ export default function ProductView({
                 variant: product.variant,
                 format,
                 priceLabel: product.price,
-                image: optionImages[format],
+                image: bottles[format],
               })
             }
             className="mt-5 h-10 w-full border border-oduro-dark/70 text-[13px] uppercase transition-colors hover:bg-oduro-dark hover:text-white"
@@ -102,7 +106,7 @@ export default function ProductView({
             Add
           </button>
 
-          <p className="mt-6 text-xs leading-[18px] text-oduro-dark">{formatDescriptions[format]}</p>
+          <p className="mt-6 text-xs leading-[18px] text-oduro-dark">{product.description?.trim() || formatDescriptions[format]}</p>
 
           <div className="mt-6">
             <Row title="Composition, care & origin">Details to be confirmed for this fragrance.</Row>
@@ -120,7 +124,7 @@ export default function ProductView({
               <Link key={slugify(p)} href={`/product/${slugify(p)}`} className="group block">
                 <div className={`relative aspect-[3/4] ${BG}`}>
                   <Image
-                    src={optionImages.Premium}
+                    src={bottles.Premium}
                     alt=""
                     fill
                     sizes="(min-width:768px) 20vw, 50vw"

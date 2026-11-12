@@ -2,17 +2,19 @@
 
 import Link from "next/link";
 import { useRef } from "react";
-import type { Product } from "@/lib/data";
+import type { Product, ProductOption } from "@/lib/data";
 import ProductCard from "./ProductCard";
 
 export default function ProductSection({
   id,
   title,
   products,
+  bottles,
 }: {
   id?: string;
   title: string;
   products: Product[];
+  bottles: Record<ProductOption, string>;
 }) {
   const track = useRef<HTMLDivElement>(null);
 
@@ -51,7 +53,7 @@ export default function ProductSection({
         className="no-scrollbar flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth"
       >
         {products.map((p, i) => (
-          <ProductCard key={`${p.name}-${i}`} product={p} />
+          <ProductCard key={`${p.name}-${i}`} product={p} bottles={bottles} />
         ))}
       </div>
     </section>

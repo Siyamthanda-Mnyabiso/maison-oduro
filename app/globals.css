@@ -11,6 +11,7 @@
   --color-oduro-ash: #e4e4e4;
 
   --font-serif: var(--font-playfair), Georgia, serif;
+  --font-script: var(--font-pinyon), "Snell Roundhand", cursive;
   --font-sans: var(--font-montserrat), system-ui, sans-serif;
 }
 

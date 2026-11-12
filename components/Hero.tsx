@@ -1,26 +1,38 @@
-/**
- * Hero video lives at /public/video/hero.mp4 (cosmos_1551657857).
- * It fills the whole screen (minus the announcement bar). The poster is shown while it loads.
- */
-export default function Hero() {
-  return (
-    <section className="relative flex h-[calc(100svh-2.25rem)] min-h-[520px] items-center justify-center overflow-hidden bg-oduro-dark">
-      <video
-        className="absolute inset-0 h-full w-full object-cover"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        poster="/images/hero-poster.jpg"
-        aria-hidden="true"
-      >
-        <source src="/video/hero.mp4" type="video/mp4" />
-      </video>
-      <div className="absolute inset-0 bg-oduro-dark/45" />
+import Image from "next/image";
+import type { HeroContent } from "@/lib/content-defaults";
 
-      <h1 className="relative z-10 px-6 text-center font-serif text-5xl font-normal leading-tight text-white md:text-[64px]">
-        Maison Oduro
+/**
+ * Full-screen hero (minus the announcement bar). Its video/image is edited in /admin;
+ * the poster shows while a video loads.
+ */
+export default function Hero({ hero, hasBar = true }: { hero: HeroContent; hasBar?: boolean }) {
+  return (
+    <section className={`relative flex ${hasBar ? "h-[calc(100svh-2.25rem)]" : "h-svh"} min-h-[520px] items-center justify-center overflow-hidden bg-oduro-dark`}>
+      {hero.mediaType === "video" ? (
+        <video
+          key={hero.mediaUrl}
+          className="absolute inset-0 h-full w-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          poster={hero.posterUrl}
+          aria-hidden="true"
+        >
+          <source src={hero.mediaUrl} />
+        </video>
+      ) : (
+        <Image src={hero.mediaUrl} alt="" fill priority sizes="100vw" className="object-cover" />
+      )}
+      <div className="absolute inset-0 bg-oduro-dark" style={{ opacity: hero.overlay / 100 }} />
+
+      <h1
+        aria-label="Maison Oduro"
+        className="relative z-10 flex items-baseline justify-center gap-1 px-6 text-center font-normal leading-tight text-white"
+      >
+        <span aria-hidden="true" className="font-script text-6xl md:text-[84px]">Maison</span>
+        <span aria-hidden="true" className="font-serif text-5xl uppercase tracking-wide md:text-[68px]">Oduro</span>
       </h1>
 
       <a
