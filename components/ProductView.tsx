@@ -26,11 +26,13 @@ export default function ProductView({
   related,
   bottles,
   gallery: extraImages,
+  shipping,
 }: {
   product: Product;
   related: Product[];
   bottles: Record<ProductOption, string>;
   gallery: string[];
+  shipping: string;
 }) {
   const { add } = useCart();
   const params = useSearchParams();
@@ -112,9 +114,7 @@ export default function ProductView({
             <Row title="Composition, care & origin">
               {product.composition?.trim() || "Details to be confirmed for this fragrance."}
             </Row>
-            <Row title="Shipping, exchanges and returns">
-              Complimentary shipping on orders over R1,500. Unopened items can be returned within 30 days.
-            </Row>
+            <Row title="Shipping, exchanges and returns">{shipping}</Row>
           </div>
         </section>
 
