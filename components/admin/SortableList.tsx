@@ -10,11 +10,14 @@ export default function SortableList<T>({
   getKey,
   onChange,
   renderItem,
+  compact = false,
 }: {
   items: T[];
   getKey: (item: T) => string;
   onChange: (next: T[]) => void;
   renderItem: (item: T, index: number) => React.ReactNode;
+  /** Controls sit in a row; for short, single-line items. */
+  compact?: boolean;
 }) {
   const [dragging, setDragging] = useState<number | null>(null);
   const [over, setOver] = useState<number | null>(null);
@@ -42,11 +45,11 @@ export default function SortableList<T>({
             setDragging(null);
             setOver(null);
           }}
-          className={`flex items-start gap-3 rounded-2xl bg-white p-3 shadow-sm ring-1 transition-shadow ${
+          className={`flex ${compact ? "items-center" : "items-start"} gap-3 rounded-2xl bg-white p-3 shadow-sm ring-1 transition-shadow ${
             over === i && dragging !== null && dragging !== i ? "ring-2 ring-black" : "ring-black/5"
           } ${dragging === i ? "opacity-50" : ""}`}
         >
-          <div className="flex shrink-0 flex-col items-center gap-1 pt-1">
+          <div className={`flex shrink-0 items-center gap-1 ${compact ? "flex-row" : "flex-col pt-1"}`}>
             <button type="button" aria-label="Move up" disabled={i === 0} onClick={() => move(i, i - 1)} className="h-6 w-6 rounded text-sm hover:bg-neutral-100 disabled:opacity-25">
               ↑
             </button>
