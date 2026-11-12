@@ -15,6 +15,7 @@ export const TAB_META: Record<ContentKey, { label: string; keywords: string }> =
   products: { label: "Products", keywords: "price name variant collection softsense vengeance" },
   bottles: { label: "Bottle photos", keywords: "premium standard rollers format image" },
   gallery: { label: "Product page photos", keywords: "gallery images order product" },
+  productInfo: { label: "Shipping & returns", keywords: "shipping exchanges returns delivery policy text product page" },
   announcement: { label: "Announcement bar", keywords: "shipping message top bar" },
   nav: { label: "Header menu", keywords: "navigation links menu" },
   footer: { label: "Footer", keywords: "slogan copyright columns links" },
@@ -22,7 +23,7 @@ export const TAB_META: Record<ContentKey, { label: string; keywords: string }> =
 
 const GROUPS: Group[] = [
   { id: "home", label: "Home page", icon: "M4 4h7v7H4V4Zm9 0h7v7h-7V4ZM4 13h7v7H4v-7Zm9 0h7v7h-7v-7Z", tabs: ["hero", "story", "popular", "layout"] },
-  { id: "catalog", label: "Products", icon: "M12 3 4 7v10l8 4 8-4V7l-8-4Zm0 9L4 7.5M12 12l8-4.5M12 12v9", tabs: ["products", "bottles", "gallery"] },
+  { id: "catalog", label: "Products", icon: "M12 3 4 7v10l8 4 8-4V7l-8-4Zm0 9L4 7.5M12 12l8-4.5M12 12v9", tabs: ["products", "bottles", "gallery", "productInfo"] },
   { id: "site", label: "Site-wide", icon: "M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm7.4-2a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z", tabs: ["announcement", "nav", "footer"] },
 ];
 

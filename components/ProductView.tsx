@@ -16,7 +16,7 @@ function Row({ title, children }: { title: string; children: React.ReactNode }) 
       <summary className="cursor-pointer list-none text-xs uppercase leading-[23px] text-oduro-dark/90 marker:hidden hover:text-oduro-dark [&::-webkit-details-marker]:hidden">
         {title}
       </summary>
-      <p className="py-2 text-xs normal-case leading-[18px] text-oduro-rich">{children}</p>
+      <p className="whitespace-pre-line py-2 text-xs normal-case leading-[18px] text-oduro-rich">{children}</p>
     </details>
   );
 }
@@ -26,11 +26,13 @@ export default function ProductView({
   related,
   bottles,
   gallery: extraImages,
+  shipping,
 }: {
   product: Product;
   related: Product[];
   bottles: Record<ProductOption, string>;
   gallery: string[];
+  shipping: string;
 }) {
   const { add } = useCart();
   const params = useSearchParams();
@@ -106,13 +108,13 @@ export default function ProductView({
             Add
           </button>
 
-          <p className="mt-6 text-xs leading-[18px] text-oduro-dark">{product.description?.trim() || formatDescriptions[format]}</p>
+          <p className="mt-6 whitespace-pre-line text-xs leading-[18px] text-oduro-dark">{product.description?.trim() || formatDescriptions[format]}</p>
 
           <div className="mt-6">
-            <Row title="Composition, care & origin">Details to be confirmed for this fragrance.</Row>
-            <Row title="Shipping, exchanges and returns">
-              Complimentary shipping on orders over R1,500. Unopened items can be returned within 30 days.
+            <Row title="Composition, care & origin">
+              {product.composition?.trim() || "Details to be confirmed for this fragrance."}
             </Row>
+            <Row title="Shipping, exchanges and returns">{shipping}</Row>
           </div>
         </section>
 

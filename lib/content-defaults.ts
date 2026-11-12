@@ -43,11 +43,13 @@ export type SiteContent = {
   footer: { slogan: string; columns: FooterColumn[]; copyright: string; legal: string };
   /** Photos shown on every product page, in order (the chosen format's bottle always leads). */
   gallery: { images: GalleryImage[] };
+  /** Text shared by every product page. */
+  productInfo: { shipping: string };
 };
 
 export type ContentKey = keyof SiteContent;
 export const CONTENT_KEYS: ContentKey[] = [
-  "hero", "story", "popular", "bottles", "layout", "products", "announcement", "nav", "footer", "gallery",
+  "hero", "story", "popular", "bottles", "layout", "products", "announcement", "nav", "footer", "gallery", "productInfo",
 ];
 
 const withIds = (list: Product[]): EditableProduct[] => list.map((p, i) => ({ ...p, id: `${slugify(p)}-${i}` }));
@@ -94,6 +96,9 @@ export const defaultContent: SiteContent = {
       { id: "g-1", url: "/images/elixir-standard.jpg" },
       { id: "g-2", url: "/images/story.jpg" },
     ],
+  },
+  productInfo: {
+    shipping: "Complimentary shipping on orders over R1,500. Unopened items can be returned within 30 days.",
   },
 };
 
@@ -169,6 +174,7 @@ export function mergeContent(rows: { key: string; value: unknown }[]): SiteConte
           variant: typeof x.variant === "string" ? x.variant : "",
           price: typeof x.price === "string" ? x.price : "",
           description: typeof x.description === "string" ? x.description.slice(0, 1200) : "",
+          composition: typeof x.composition === "string" ? x.composition.slice(0, 1200) : "",
         }))
       : fallback;
   const products = {
@@ -221,5 +227,10 @@ export function mergeContent(rows: { key: string; value: unknown }[]): SiteConte
         : d.gallery.images,
   };
 
-  return { hero, story, popular: { cards }, bottles, layout: { order }, products, announcement, nav, footer, gallery };
+  const pi = byKey.get("productInfo");
+  const productInfo = {
+    shipping: isObj(pi) && typeof pi.shipping === "string" ? pi.shipping.slice(0, 1200) : d.productInfo.shipping,
+  };
+
+  return { hero, story, popular: { cards }, bottles, layout: { order }, products, announcement, nav, footer, gallery, productInfo };
 }

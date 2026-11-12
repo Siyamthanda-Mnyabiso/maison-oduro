@@ -38,6 +38,16 @@ create policy "admin update" on public.site_content for update to authenticated 
 drop policy if exists "admin delete" on public.site_content;
 create policy "admin delete" on public.site_content for delete to authenticated using (public.is_admin());
 
+-- 3b. Table privileges. Newer Supabase projects do not grant these automatically,
+--     and without them every request fails with "42501 permission denied".
+--     (RLS above still decides WHICH rows each role may touch.)
+grant usage on schema public to anon, authenticated;
+grant select on public.site_content to anon, authenticated;
+grant insert, update, delete on public.site_content to authenticated;
+grant execute on function public.is_admin() to authenticated;
+
+notify pgrst, 'reload schema';
+
 -- 4. Media storage (public bucket, admin-only writes)
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values ('site-media', 'site-media', true, 52428800,
