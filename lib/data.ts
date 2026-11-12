@@ -4,6 +4,8 @@ export type Product = {
   price: string;
   /** Optional product blurb shown on its page; falls back to the format description. */
   description?: string;
+  /** Optional text for the "Composition, care & origin" row on its page. */
+  composition?: string;
 };
 
 // Product copy comes straight from the Figma design (Page 1, hi-fi).
