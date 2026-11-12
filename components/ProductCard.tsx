@@ -5,19 +5,23 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { Product, ProductOption } from "@/lib/data";
-import { optionImages, productOptions, slugify } from "@/lib/data";
+import { productOptions, slugify } from "@/lib/data";
 
-
-const uniqueImages = Array.from(new Set(Object.values(optionImages)));
-
-export default function ProductCard({ product }: { product: Product }) {
+export default function ProductCard({
+  product,
+  bottles,
+}: {
+  product: Product;
+  bottles: Record<ProductOption, string>;
+}) {
+  const uniqueImages = Array.from(new Set(Object.values(bottles)));
   const router = useRouter();
   const href = `/product/${slugify(product)}`;
   const [selected, setSelected] = useState<ProductOption>("Premium");
   const [preview, setPreview] = useState<ProductOption | null>(null);
 
   // Hovering (or focusing) a format previews its bottle; clicking selects it.
-  const shown = optionImages[preview ?? selected];
+  const shown = bottles[preview ?? selected];
 
   return (
     <article className="group w-[62%] shrink-0 snap-start sm:w-[calc((100%-48px)/3)] lg:w-[calc((100%-96px)/5)]">

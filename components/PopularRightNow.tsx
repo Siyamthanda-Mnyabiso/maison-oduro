@@ -3,9 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { popularCards, popularTabs } from "@/lib/data";
+import type { PopularCard } from "@/lib/content-defaults";
+import { popularTabs } from "@/lib/data";
 
-export default function PopularRightNow() {
+export default function PopularRightNow({ cards }: { cards: PopularCard[] }) {
   const [tab, setTab] = useState<(typeof popularTabs)[number]>("Women");
 
   return (
@@ -32,11 +33,11 @@ export default function PopularRightNow() {
       </div>
 
       <div className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
-        {popularCards.map((c) => (
-          <Link key={c.title} href="#" className="group block">
+        {cards.map((c) => (
+          <Link key={c.id} href="#" className="group block">
             <div className="relative aspect-[4/5] overflow-hidden bg-oduro-ash">
               <Image
-                src="/images/elixir.jpg"
+                src={c.imageUrl}
                 alt=""
                 fill
                 sizes="(min-width:1024px) 25vw, 50vw"

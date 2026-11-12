@@ -2,6 +2,8 @@ export type Product = {
   name: string;
   variant: string;
   price: string;
+  /** Optional product blurb shown on its page; falls back to the format description. */
+  description?: string;
 };
 
 // Product copy comes straight from the Figma design (Page 1, hi-fi).
@@ -27,9 +29,6 @@ export const slugify = (p: Product) =>
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
-
-export const allProducts = () => [...softsense, ...vengeance];
-export const findProduct = (slug: string) => allProducts().find((p) => slugify(p) === slug);
 
 export const productOptions = ["Premium", "Standard", "Rollers"] as const;
 export type ProductOption = (typeof productOptions)[number];
