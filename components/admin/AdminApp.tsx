@@ -161,35 +161,153 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
+const HERO_DEFAULT_MEDIA = { video: "/video/hero.mp4", image: "/images/hero-poster.jpg" } as const;
+const OVERLAY_PRESETS = [
+  { label: "None", value: 0 },
+  { label: "Light", value: 25 },
+  { label: "Medium", value: 45 },
+  { label: "Strong", value: 65 },
+] as const;
+
+/** A white block inside the grey editor panel. */
+function Card({ title, description, children }: { title: string; description?: string; children: React.ReactNode }) {
+  return (
+    <div className="flex flex-col gap-4 rounded-2xl bg-white p-5 shadow-sm ring-1 ring-black/5">
+      <div>
+        <h3 className="text-[15px] font-medium">{title}</h3>
+        {description && <p className="mt-1 text-[13px] leading-relaxed text-neutral-500">{description}</p>}
+      </div>
+      {children}
+    </div>
+  );
+}
+
 function HeroPanel({ value, onChange }: { value: SiteContent["hero"]; onChange: (v: SiteContent["hero"]) => void }) {
+  // Remember each type's file so flipping Video <-> Image doesn't lose the other one.
+  const [memory, setMemory] = useState<Partial<Record<"video" | "image", string>>>({});
+  const isVideo = value.mediaType === "video";
+
+  const switchType = (t: "video" | "image") => {
+    if (t === value.mediaType) return;
+    setMemory((m) => ({ ...m, [value.mediaType]: value.mediaUrl }));
+    onChange({ ...value, mediaType: t, mediaUrl: memory[t] ?? HERO_DEFAULT_MEDIA[t] });
+  };
+
   return (
     <>
       <h2 className="sr-only">Hero (top of the home page)</h2>
-      <fieldset className="flex gap-6">
-        <legend className={`${labelCls} mb-2`}>Show a</legend>
-        {(["video", "image"] as const).map((t) => (
-          <label key={t} className="flex items-center gap-2 text-sm capitalize">
-            <input type="radio" name="hero-type" checked={value.mediaType === t} onChange={() => onChange({ ...value, mediaType: t })} />
-            {t}
-          </label>
-        ))}
-      </fieldset>
-      <MediaField
-        key={value.mediaType}
-        label={value.mediaType === "video" ? "Hero video" : "Hero image"}
-        kind={value.mediaType}
-        folder="hero"
-        value={value.mediaUrl.startsWith("/") && value.mediaType === "image" && value.mediaUrl.endsWith(".mp4") ? "" : value.mediaUrl}
-        onChange={(mediaUrl) => onChange({ ...value, mediaUrl })}
-        hint={value.mediaType === "video" ? `MP4 or WebM, up to ${MAX_VIDEO_MB} MB. Keep it short (10-20 s) and compressed for fast loading.` : "JPG, PNG or WebP. Large photos are resized automatically. Wide landscape images work best."}
-      />
-      {value.mediaType === "video" && (
-        <MediaField label="Cover image (shown while the video loads)" folder="hero" value={value.posterUrl} onChange={(posterUrl) => onChange({ ...value, posterUrl })} />
-      )}
-      <Field label={`Dark overlay: ${value.overlay}%`}>
-        <input type="range" min={0} max={80} value={value.overlay} onChange={(e) => onChange({ ...value, overlay: Number(e.target.value) })} />
-        <span className="text-xs text-neutral-600">Higher makes the brand name easier to read on bright footage.</span>
-      </Field>
+      <div className="grid items-start gap-6 xl:grid-cols-2">
+        <div className="flex min-w-0 flex-col gap-4">
+          <Card title="What should the hero show?" description="The full-screen opening of the home page.">
+            <div role="radiogroup" aria-label="Hero media type" className="grid grid-cols-2 gap-1 rounded-xl bg-[#f0f0f3] p-1">
+              {(
+                [
+                  { t: "video", label: "Video", d: "M4 6h11a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1Zm13 4 4-2.5v9L17 14" },
+                  { t: "image", label: "Image", d: "M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Zm0 12 4-4 4 4 3-3 4 4M9 9.5h.01" },
+                ] as const
+              ).map(({ t, label, d }) => (
+                <button
+                  key={t}
+                  type="button"
+                  role="radio"
+                  aria-checked={value.mediaType === t}
+                  onClick={() => switchType(t)}
+                  className={`flex h-11 items-center justify-center gap-2 rounded-lg text-[13px] transition-colors ${
+                    value.mediaType === t ? "bg-[#222] text-white shadow" : "text-neutral-700 hover:bg-white"
+                  }`}
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d={d} />
+                  </svg>
+                  {label}
+                </button>
+              ))}
+            </div>
+          </Card>
+
+          <Card title={isVideo ? "Hero video" : "Hero image"}>
+            <MediaField
+              key={value.mediaType}
+              wide
+              label={isVideo ? "Click or drop a video" : "Click or drop an image"}
+              kind={value.mediaType}
+              folder="hero"
+              value={value.mediaUrl}
+              onChange={(mediaUrl) => onChange({ ...value, mediaUrl })}
+              hint={
+                isVideo
+                  ? `MP4 or WebM, up to ${MAX_VIDEO_MB} MB. Keep it short (10-20 seconds) and compressed so it loads fast.`
+                  : "JPG, PNG or WebP. Large photos are resized automatically. Wide landscape images work best."
+              }
+            />
+          </Card>
+
+          {isVideo && (
+            <Card title="Cover image" description="Shown while the video loads, and on phones that block autoplay.">
+              <MediaField label="Cover image" folder="hero" value={value.posterUrl} onChange={(posterUrl) => onChange({ ...value, posterUrl })} />
+            </Card>
+          )}
+
+          <Card title="Dark overlay" description="Darkens the media so the brand name stays easy to read on bright footage.">
+            <div className="flex items-center gap-4">
+              <input
+                type="range"
+                min={0}
+                max={80}
+                step={5}
+                value={value.overlay}
+                aria-label="Dark overlay strength"
+                onChange={(e) => onChange({ ...value, overlay: Number(e.target.value) })}
+                className="h-2 w-full cursor-pointer accent-black"
+              />
+              <span className="w-14 shrink-0 rounded-lg bg-[#f0f0f3] py-1.5 text-center text-[13px] font-medium tabular-nums">{value.overlay}%</span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {OVERLAY_PRESETS.map((o) => (
+                <button
+                  key={o.label}
+                  type="button"
+                  aria-pressed={value.overlay === o.value}
+                  onClick={() => onChange({ ...value, overlay: o.value })}
+                  className={`h-9 rounded-xl px-4 text-[13px] transition-colors ${
+                    value.overlay === o.value ? "bg-[#222] text-white" : "bg-[#f0f0f3] text-neutral-700 hover:bg-neutral-200"
+                  }`}
+                >
+                  {o.label}
+                </button>
+              ))}
+            </div>
+          </Card>
+        </div>
+
+        {/* Live preview */}
+        <div className="flex min-w-0 flex-col gap-3 xl:sticky xl:top-6">
+          <p className={labelCls}>Live preview</p>
+          <div className="relative aspect-[16/10] overflow-hidden rounded-2xl bg-black shadow-sm ring-1 ring-black/5">
+            {isVideo ? (
+              <video key={value.mediaUrl} src={value.mediaUrl} poster={value.posterUrl} muted loop playsInline autoPlay aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" />
+            ) : (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={value.mediaUrl} alt="" className="absolute inset-0 h-full w-full object-cover" />
+            )}
+            <div className="absolute inset-0 bg-oduro-dark transition-opacity" style={{ opacity: value.overlay / 100 }} />
+            <div className="absolute inset-x-0 top-0 flex h-9 items-center justify-between px-4 text-[9px] uppercase tracking-[0.18em] text-white/80">
+              <span>Menu</span>
+              <span>Bag</span>
+            </div>
+            <p className="absolute inset-0 flex items-center justify-center gap-1 text-white" aria-hidden="true">
+              <span className="font-script text-[44px] leading-none sm:text-[56px]">Maison</span>
+              <span className="font-serif text-[30px] uppercase tracking-wide sm:text-[40px]">Oduro</span>
+            </p>
+            <span aria-hidden="true" className="absolute bottom-4 left-1/2 flex h-8 w-8 -translate-x-1/2 items-center justify-center rounded-full border border-white/70 text-white">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M5 12l7 7 7-7" /></svg>
+            </span>
+          </div>
+          <p className="text-xs leading-relaxed text-neutral-500">
+            This is how the top of the home page will look. Changes show here straight away, but go live only when you press <strong>Save changes</strong>.
+          </p>
+        </div>
+      </div>
     </>
   );
 }

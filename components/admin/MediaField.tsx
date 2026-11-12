@@ -33,6 +33,7 @@ export default function MediaField({
   kind = "image",
   folder,
   hint,
+  wide = false,
 }: {
   label: string;
   value: string;
@@ -40,10 +41,13 @@ export default function MediaField({
   kind?: "image" | "video";
   folder: string;
   hint?: string;
+  /** Full-width 16:9 preview instead of the small thumbnail. */
+  wide?: boolean;
 }) {
   const input = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [dragOver, setDragOver] = useState(false);
 
   const upload = async (picked: File) => {
     setError("");
@@ -71,10 +75,34 @@ export default function MediaField({
     onChange(supabase.storage.from(MEDIA_BUCKET).getPublicUrl(path).data.publicUrl);
   };
 
+  const pick = () => input.current?.click();
+  const noun = kind === "video" ? "video" : "image";
+
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex min-w-0 flex-col gap-2">
       <span className="text-[11px] font-medium uppercase tracking-wider text-neutral-500">{label}</span>
-      <div className="flex h-40 w-full items-center justify-center overflow-hidden rounded-2xl bg-[#e9e9ee] sm:w-64">
+
+      <div
+        role="button"
+        tabIndex={0}
+        aria-label={`${value ? "Replace" : "Upload"} ${noun}: ${label}`}
+        onClick={pick}
+        onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), pick())}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setDragOver(true);
+        }}
+        onDragLeave={() => setDragOver(false)}
+        onDrop={(e) => {
+          e.preventDefault();
+          setDragOver(false);
+          const f = e.dataTransfer.files?.[0];
+          if (f) void upload(f);
+        }}
+        className={`group relative flex cursor-pointer items-center justify-center overflow-hidden rounded-2xl bg-[#e9e9ee] outline-none ring-2 transition-shadow focus-visible:ring-black ${
+          dragOver ? "ring-black" : "ring-transparent"
+        } ${wide ? "aspect-video w-full" : "h-40 w-full sm:w-64"}`}
+      >
         {value ? (
           kind === "video" ? (
             <video key={value} src={value} muted loop playsInline autoPlay className="h-full w-full object-cover" />
@@ -83,32 +111,45 @@ export default function MediaField({
             <img src={value} alt="" className="h-full w-full object-cover" />
           )
         ) : (
-          <span className="text-xs text-neutral-500">Nothing selected</span>
+          <span className="px-4 text-center text-xs text-neutral-500">No {noun} yet</span>
         )}
-      </div>
-      <div className="flex items-center gap-3">
-        <button
-          type="button"
-          disabled={busy}
-          onClick={() => input.current?.click()}
-          className="h-9 rounded-xl bg-[#222] px-4 text-[13px] text-white hover:opacity-85 disabled:opacity-50"
+
+        {/* Hover / drag / busy prompt */}
+        <div
+          className={`absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/55 text-white transition-opacity ${
+            busy || dragOver ? "opacity-100" : "opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100"
+          }`}
         >
-          {busy ? "Uploading…" : value ? "Replace" : "Upload"}
-        </button>
-        <input
-          ref={input}
-          type="file"
-          accept={kind === "video" ? "video/mp4,video/webm" : "image/jpeg,image/png,image/webp"}
-          className="hidden"
-          onChange={(e) => {
-            const f = e.target.files?.[0];
-            e.target.value = "";
-            if (f) void upload(f);
-          }}
-        />
+          {busy ? (
+            <>
+              <span aria-hidden="true" className="h-6 w-6 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+              <span className="text-[13px]">Uploading…</span>
+            </>
+          ) : (
+            <>
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M12 16V4m0 0L7 9m5-5 5 5M5 20h14" />
+              </svg>
+              <span className="text-[13px]">{dragOver ? `Drop the ${noun} here` : `${value ? "Replace" : "Upload"} ${noun}`}</span>
+              {!dragOver && <span className="text-[11px] text-white/70">or drag a file onto this box</span>}
+            </>
+          )}
+        </div>
       </div>
-      {hint && <p className="text-xs text-neutral-500">{hint}</p>}
-      {error && <p role="alert" className="text-xs text-red-700">{error}</p>}
+
+      <input
+        ref={input}
+        type="file"
+        accept={kind === "video" ? "video/mp4,video/webm" : "image/jpeg,image/png,image/webp"}
+        className="hidden"
+        onChange={(e) => {
+          const f = e.target.files?.[0];
+          e.target.value = "";
+          if (f) void upload(f);
+        }}
+      />
+      {hint && <p className="text-xs leading-relaxed text-neutral-500">{hint}</p>}
+      {error && <p role="alert" className="text-xs leading-relaxed text-red-700">{error}</p>}
     </div>
   );
 }
