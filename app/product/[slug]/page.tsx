@@ -38,6 +38,7 @@ export default async function ProductPage({
           related={all.filter((p) => p !== product).slice(0, 4)}
           bottles={content.bottles}
           gallery={content.gallery.images.map((g) => g.url)}
+          shipping={content.productInfo.shipping}
         />
       </Suspense>
       <Footer footer={content.footer} />

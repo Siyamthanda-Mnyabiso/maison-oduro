@@ -120,6 +120,7 @@ function Editor({ session }: { session: Session }) {
       {tab === "layout" && <LayoutPanel value={content.layout} onChange={(v) => update("layout", v)} />}
       {tab === "products" && <ProductsPanel value={content.products} onChange={(v) => update("products", v)} />}
       {tab === "gallery" && <GalleryPanel value={content.gallery} onChange={(v) => update("gallery", v)} />}
+      {tab === "productInfo" && <ProductInfoPanel value={content.productInfo} onChange={(v) => update("productInfo", v)} />}
       {tab === "announcement" && <AnnouncementPanel value={content.announcement} onChange={(v) => update("announcement", v)} />}
       {tab === "nav" && <NavPanel value={content.nav} onChange={(v) => update("nav", v)} />}
       {tab === "footer" && <FooterPanel value={content.footer} onChange={(v) => update("footer", v)} />}
@@ -375,6 +376,26 @@ function GalleryPanel({ value, onChange }: { value: SiteContent["gallery"]; onCh
       >
         Add photo
       </button>
+    </>
+  );
+}
+
+function ProductInfoPanel({ value, onChange }: { value: SiteContent["productInfo"]; onChange: (v: SiteContent["productInfo"]) => void }) {
+  return (
+    <>
+      <h2 className="sr-only">Shipping, exchanges and returns</h2>
+      <p className="text-sm text-neutral-600">
+        The text inside the &ldquo;Shipping, exchanges and returns&rdquo; row on every product page.
+      </p>
+      <Field label="Shipping, exchanges and returns">
+        <textarea
+          className={`${inputCls} h-auto min-h-[140px] resize-y py-3 leading-relaxed`}
+          rows={6}
+          maxLength={1200}
+          value={value.shipping}
+          onChange={(e) => onChange({ shipping: e.target.value })}
+        />
+      </Field>
     </>
   );
 }
